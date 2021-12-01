@@ -38,12 +38,12 @@ double Player::getFierceness() const
 
 std::ostream &operator<<(std::ostream &os, const Player &dt)
 {
-  return os <<
-    "Player " << dt.getId() << " : "
-    "Fierceness = " << std::setprecision(3) << dt.getFierceness() << std::setw(13) <<
-    "Cards = " << dt.size() << std::setw(15) <<
-    "Battles = " << dt.getBattle() << std::setw(12) <<
-    "Wins = " << dt.getWin();
+  return os << "\t" <<
+    std::setw(3) << std::left <<
+    "Player " << std::setw(3) << dt.getId() + 1 << ": Fierceness: "  << std::setprecision(3) << std::setw(5) << dt.getFierceness() <<
+    " Cards: " << std::setw(5) << dt.size() <<
+    " Battles: " << std::setw(5) << dt.getBattle() <<
+    " Wins: " << dt.getWin();
 }
 
 void Player::addBattle()

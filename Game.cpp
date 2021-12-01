@@ -55,7 +55,10 @@ void Game::play()
     std::map<Player*, Card> piles;
 
     for (auto & p : _players) // All players put a card on the table
-      piles.insert({p, p->removeCard()});
+      if (p->size()) {
+        p->addBattle();
+        piles.insert({p, p->removeCard()});
+      }
 
     auto maxHand = std::max_element(piles.begin(), piles.end(), // Find best cards
       [](const auto& h1, const auto& h2) {
@@ -64,11 +67,17 @@ void Game::play()
     );
 
     if (this->needAWar(piles)) {
-      for (auto & hand : piles)
-        maxHand->first->addCard(hand.second);
+      std::vector<Player*> warPlayers;
+      for (auto & hand : piles) {
+        if (hand.second == maxHand->second)
+          warPlayers.push_back(hand.first);
+        _lostAndFound.addCard(hand.second);
+      }
+      this->handleWar(warPlayers);
     } else { // if not need a war (simple case)
       for (auto & hand : piles)
         maxHand->first->addCard(hand.second);
+      maxHand->first->addWin();
     }
 
     std::cout << "Battle " << battleId << " Stats:" << std::endl;
@@ -90,11 +99,53 @@ bool Game::needAWar(const std::map<Player *, Card>& piles) const
     if (hand.second.getRank() == maxHand->second.getRank()) find++;
   return find != 1;
 }
-void Game::handleWar(const std::map<Player *, Card> & piles)
+
+void Game::handleWar(std::vector<Player*> & warPlayers)
 {
-  auto maxHand = std::max_element(piles.begin(), piles.end(), // Find best cards
+  WarPile warPile;
+  std::map<Player*, Card> piles;
+
+  for (int i = 0, l = _lostAndFound.size(); i < l; i++)
+    warPile.addCard(_lostAndFound.removeCard());
+
+  for (auto & p : warPlayers) {
+    if(p->size() < 4) {
+      for(int i = 0, l = p->size(); i != l; i++)
+        warPile.addCard(p->removeCard());
+      continue;
+    }
+    for (int i = 0; i != 3; i++)
+      warPile.addCard(p->removeCard());
+  }
+
+  for (auto & p : warPlayers) // All players put a card on the table
+    if (p->size()) {
+      p->addBattle();
+      piles.insert({p, p->removeCard()});
+    }
+
+  auto bestHand = std::max_element(piles.begin(), piles.end(), // Find best cards
     [](const auto& h1, const auto& h2) {
-                                    return h1.second < h2.second;
-                                  }
+      return h1.second < h2.second;
+    }
   );
+  if (this->needAWar(piles)) {
+    std::vector<Player*> nextWarPlayers;
+    for (auto & hand : piles) {
+      if (hand.second == bestHand->second)
+        nextWarPlayers.push_back(hand.first);
+      warPile.addCard(hand.second);
+    }
+
+    for (int i = 0, l = warPile.size(); i < l; i++)
+      _lostAndFound.addCard(warPile.removeCard());
+    return this->handleWar(nextWarPlayers);
+  }
+
+  for (auto & hand : piles)
+    warPile.addCard(hand.second);
+
+  for (int i = 0, l = warPile.size(); i < l; i++)
+    bestHand->first->addCard(warPile.removeCard());
+  bestHand->first->addWin();
 }

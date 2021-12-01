@@ -10,7 +10,7 @@
 
 int main()
 {
-  int deckNbr = 2, playerNbr = 2;
+  int deckNbr = 3, playerNbr = 5;
 
   std::cout << "-------[ Mega War ]-------" << std::endl;
   std::cout << "---[ By Emile Lepetit ]---" << std::endl << std::endl;

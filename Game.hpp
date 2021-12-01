@@ -12,6 +12,8 @@
 #include "Deck.hpp"
 #include "Player.hpp"
 #include "Card.hpp"
+#include "LostAndFound.hpp"
+#include "WarPile.hpp"
 
 #include <map>
 
@@ -26,9 +28,10 @@ class Game {
 
   private:
     std::vector<Player *> _players;
+    LostAndFound _lostAndFound;
     bool isEnd() const;
     bool needAWar(const std::map<Player*, Card>&) const;
-    void handleWar(const std::map<Player*, Card>&);
+    void handleWar(std::vector<Player*> &);
 };
 
 
