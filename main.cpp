@@ -10,15 +10,15 @@
 
 int main()
 {
-  int deckNbr = 3, playerNbr = 5;
+  int deckNbr, playerNbr;
 
   std::cout << "-------[ Mega War ]-------" << std::endl;
   std::cout << "---[ By Emile Lepetit ]---" << std::endl << std::endl;
 
   std::cout << "How many deck do you want to use : ";
-  //std::cin >> deckNbr;
+  std::cin >> deckNbr;
   std::cout << "How many players are going to play : ";
-  //std::cin >> playerNbr;
+  std::cin >> playerNbr;
 
   std::cout << std::endl;
   auto game = Game(deckNbr, playerNbr);

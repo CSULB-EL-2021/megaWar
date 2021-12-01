@@ -11,25 +11,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
-      - name: Install Boost Test
-        shell: bash
-        run: |
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then
-          vcpkg install boost-test --triplet x64-windows
-          echo "BUILD_TYPE=Release" >> $GITHUB_ENV
-          else
-          vcpkg install boost-test
-          echo "BUILD_TYPE=Debug" >> $GITHUB_ENV
-          fi
-          vcpkg integrate install
-      - name: Configure
-        shell: bash
-        run: |
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then
-             cmake -S. -Bbuild -DCMAKE_TOOLCHAIN_FILE="C:/vcpkg/scripts/buildsystems/vcpkg.cmake" -Ax64
-          else
-             cmake -S. -Bbuild -DCMAKE_BUILD_TYPE="$BUILD_TYPE" -DCMAKE_TOOLCHAIN_FILE="/usr/local/share/vcpkg/scripts/buildsystems/vcpkg.cmake"
-          fi
       - name: Build project
         uses: nicledomaS/cmake_build_action@v1.4
         with:

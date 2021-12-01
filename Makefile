@@ -12,9 +12,17 @@ NAME		=	prog6
 RM			=	rm -f
 
 CXXFLAGS	+=	-std=c++11
-# CXXFLAGS	+=	-Werror -Wall -Wextra
+CXXFLAGS	+=	-Werror -Wall -Wextra
 
-SRCS		=	./main.cpp	\
+SRCS		=	./main.cpp			\
+				./Card.cpp 			\
+				./CardPile.cpp 		\
+				./Deck.cpp 			\
+				./Game.cpp 			\
+				./LostAndFound.cpp	\
+				./MegaDeck.cpp 		\
+				./Player.cpp 		\
+				./WarPile.cpp
 
 OBJS		=	$(SRCS:.cpp=.o)
 
